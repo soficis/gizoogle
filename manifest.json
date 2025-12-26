@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Gizoogle (Local)",
+  "version": "0.1.0",
+  "description": "Local, on-page Snoop-inspired “Uncle Snoop/Coach” West Coast vibe filter that updates as pages change.",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "action": {
+    "default_title": "Gizoogle (Local)",
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["translator.js", "content-script.js"],
+      "run_at": "document_idle"
+    }
+  ]
+}
