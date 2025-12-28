@@ -1,8 +1,13 @@
 /**
- * Gizoogle Translator
+ * Gizoogle Translator - The Hybrid
  * 
- * Transforms text into Snoop Dogg-inspired speech following the "Uncle Snoop" era voice.
- * Based on research notes for authentic, modern, supportive translation style.
+ * Authentically blends 1993 "Doggystyle" with 2025 "Mogul Snoop" voice.
+ * 
+ * The AI code-switches between two energies:
+ * - Mode A "The Doggy Dogg" (1993-1996): Guarded, laconic, survivalist. Triggered by warnings, errors, failures.
+ * - Mode B "The Mogul" (2020-2025): Generous, expansive, strategic. Triggered by success, instructions, profits.
+ * 
+ * Real Snoop transitions by connecting street survival to business strategy using "chess, not checkers" logic.
  */
 (function (root, factory) {
   if (typeof module === "object" && typeof module.exports === "object") {
@@ -14,6 +19,73 @@
   // ============================================================================
   // Constants - Vocabulary
   // ============================================================================
+
+  // Mode A: "The Doggy Dogg" (1993–1996) - Guarded, survivalist responses for errors/warnings
+  const MODE_A_INTROS = [
+    "Man, this whole setup lookin' twisted",
+    "Yo, peep this. The system actin' scandalous right now",
+    "Hold up, somethin' ain't right here",
+    "Listen here, this is real",
+    "On the real, we got a situation"
+  ];
+
+  const MODE_A_BRIDGE_PHRASES = [
+    "It's chess, not checkers.",
+    "But we ain't foldin'.",
+    "But that's the play.",
+    "We just pivot and slide to the next move.",
+    "That's the game right there."
+  ];
+
+  const MODE_A_VOCABULARY = {
+    twisted: ["twisted", "scandalous", "rough", "shady"],
+    bounce_back: ["bounce back", "reset the board", "run it back", "recover"],
+    chill: ["chill", "easy", "don't stress", "breathe"],
+    real: ["on the real", "real talk", "straight up", "no cap"]
+  };
+
+  // Mode B: "The Mogul" (2020–2025) - Strategic, generous responses for success/instructions
+  const MODE_B_INTROS = [
+    "Look here, loved one",
+    "See, here's the thing",
+    "Check it out, family",
+    "Listen to your Uncle Snoop",
+    "Let me break this down for ya"
+  ];
+
+  const MODE_B_WISDOM = [
+    "You gotta own the masters to run the game.",
+    "That's how you protect your IP.",
+    "Let that spirit cook.",
+    "Don't rush the process.",
+    "That's the real wealth right there.",
+    "You building something here.",
+    "We stay strategic."
+  ];
+
+  const MODE_B_VOCABULARY = {
+    admin: ["owner", "the speculator", "the boss"],
+    save: ["vault", "catalog", "put in the vault"],
+    try_again: ["run the play back", "reset", "one more time"],
+    wait: ["let it marinate", "don't rush", "give it time"],
+    user: ["loved one", "family", "nephew/niece"],
+    settings: ["spices", "seasoning", "flavor profile", "ingredients"],
+    edit: ["remix", "add flavor to", "spice up"],
+    custom: ["signature", "homemade", "secret recipe"],
+    processing: ["in the kitchen", "on the stove", "simmering"],
+    finish: ["plate it up", "serve it", "ready to eat"],
+    password: ["secret code", "G-Code", "combination"],
+    private: ["low profile", "between us", "for the fam only"],
+    security: ["lock it down", "keep it guarded", "the code"],
+    unknown: ["unverified", "strange face", "who dis?"]
+  };
+
+  // Authentic 1993 slang (not parody "-izzle" speech)
+  const AUTHENTIC_90S_SLANG = [
+    { pattern: /\bG\b/gi, replacement: "G" },
+    { pattern: /\bloc(s?)\b/gi, replacement: (m) => m.toLowerCase().endsWith('s') ? "locs" : "loc" },
+    { pattern: /\btwisted\b/gi, replacement: "twisted" }
+  ];
 
   const SENTENCE_TAGS = [
     "you feel me?",
@@ -29,7 +101,8 @@
     "keep it pushin'.",
     "that's how we do.",
     "I love that for us.",
-    "we stay ready."
+    "we stay ready.",
+    "n' ery-thing."
   ];
 
   const SOUND_EFFECTS = {
@@ -66,7 +139,7 @@
 
   const MIN_LEVEL = 1;
   const MAX_LEVEL = 3;
-  const DEFAULT_LEVEL = 2;
+  const DEFAULT_LEVEL = 3;
 
   const LONG_SENTENCE_THRESHOLD = 15;
   const SHORT_TEXT_THRESHOLD = 4;
@@ -205,7 +278,50 @@
   }
 
   // ============================================================================
-  // UI Text Detection
+  // Mode Detection (The Hybrid Code-Switch)
+  // ============================================================================
+
+  /**
+   * Detect which mode the text should use:
+   * Mode A: "The Doggy Dogg" - for warnings, errors, failures (guarded, survivalist)
+   * Mode B: "The Mogul" - for success, instructions, profits (generous, strategic)
+   */
+  function detectMode(text) {
+    const lower = text.toLowerCase();
+
+    // Mode A triggers: Warnings, errors, technical failures, defensive statements
+    const isModeA = /\b(warning|caution|danger|error|failed|failure|problem|issue|hiccup|cannot|lost|crashed|frozen|timed out|timeout|timeout|network|connection\s+(lost|failed|dropped))\b/.test(lower);
+    
+    if (isModeA) return "A"; // "The Doggy Dogg" - survival mode
+
+    // Mode B triggers: Success messages, instructions, welcomes, profit/numbers, teaching moments
+    const isModeB = /\b(success|successful|complete|completed|done|saved|locked in|approved|confirmed|learn|teach|instruction|tutorial|guide|welcome|setup|onboarding|profit|revenue|equity|leverage|owner|masters|catalog|vault)\b/.test(lower);
+    
+    if (isModeB) return "B"; // "The Mogul" - strategic mode
+
+    // Default to neutral but lean toward Mode B for positive/instructional content
+    return "neutral";
+  }
+
+  /**
+   * Generate a code-switch bridge that connects Mode A observation to Mode B solution.
+   * "It's chess, not checkers" is the philosophy.
+   */
+  function generateCodeSwitchBridge(text, seed) {
+    const bridgePhrases = [
+      "But chill... we gotta maneuver.",
+      "But we ain't foldin'.",
+      "But that's the play.",
+      "But listen, we reset.",
+      "But here's the move."
+    ];
+
+    const bridge = selectByHash(bridgePhrases, seed);
+    return ` ${bridge} This a chess move.`;
+  }
+
+  // ============================================================================
+  // UI Text Detection & Sentiment Analysis
   // ============================================================================
 
   function looksLikeUiText(text) {
@@ -485,6 +601,130 @@
   }
 
   // ============================================================================
+  // Death Row Era Vocabulary (Mode Switching)
+  // ============================================================================
+
+  /**
+   * Enhanced vocabulary reflecting Snoop's 2025 "Mogul" era mixed with 1993 street logic.
+   * Maps terms to their Mode A (street) and Mode B (business) equivalents.
+   */
+  function applyAdminOwnerReplacements(text, seed, mode) {
+    // "Admin" / "Owner" -> "Top Dogg" (93) or "The Speculator" (25)
+    if (mode === "B") {
+      return text.replace(/\badmin(istrator|istrators)?\b/gi, (m) => {
+        const options = ["owner", "the speculator", "the boss"];
+        return preserveCase(m, selectByHash(options, computeHash(m.toLowerCase()) + seed));
+      });
+    }
+    return text.replace(/\badmin(istrator|istrators)?\b/gi, (m) =>
+      preserveCase(m, "top dog")
+    );
+  }
+
+  function applySaveVaultReplacements(text, seed, mode) {
+    // "Save" / "Keep" -> "Stash" (93) or "Vault/Catalog" (25)
+    if (mode === "B") {
+      return text.replace(/\b(save|saved|saving)\b/gi, (m) => {
+        const options = ["vault", "catalog", "put in the vault", "lock away"];
+        return preserveCase(m, selectByHash(options, computeHash(m.toLowerCase()) + seed));
+      });
+    }
+    return text.replace(/\b(save|saved|saving)\b/gi, (m) =>
+      preserveCase(m, "stash")
+    );
+  }
+
+  function applyTryAgainReplacements(text, seed, mode) {
+    // "Try Again" -> "Bounce back" (93) or "Run the play back" (25)
+    if (mode === "B") {
+      return text.replace(/\b(try again|retry|retrying)\b/gi, (m) => {
+        const options = ["run the play back", "reset", "run it back again"];
+        return preserveCase(m, selectByHash(options, computeHash(m.toLowerCase()) + seed));
+      });
+    }
+    return text.replace(/\b(try again|retry|retrying)\b/gi, (m) =>
+      preserveCase(m, "bounce back")
+    );
+  }
+
+  function applyWaitReplacements(text, seed, mode) {
+    // "Wait" -> "Chill" (93) or "Let it marinate" (25)
+    if (mode === "B") {
+      return text.replace(/\b(wait|waiting|please wait|hold on)\b/gi, (m) => {
+        const options = ["let it marinate", "don't rush the process", "give it time"];
+        return preserveCase(m, selectByHash(options, computeHash(m.toLowerCase()) + seed));
+      });
+    }
+    return text.replace(/\b(wait|waiting|please wait|hold on)\b/gi, (m) =>
+      preserveCase(m, "chill")
+    );
+  }
+
+  function applyUserReplacements(text, seed) {
+    // "User" -> "Homie" or "Loved One" (depending on context)
+    return text.replace(/\b(users?)\b/gi, (match) => {
+      const isPlural = match.toLowerCase().endsWith("s");
+      const singularOptions = ["my people", "family", "loved one", "nephew"];
+      const pluralOptions = ["my people", "da family", "loved ones", "y'all"];
+      const options = isPlural ? pluralOptions : singularOptions;
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+  }
+
+  /**
+   * Cooking/Recipe Metaphors (Mode B): Transform technical terms into culinary wisdom.
+   * "Let that spirit cook" philosophy - building something with care and intention.
+   */
+  function applyCookingMetaphors(text, seed, mode) {
+    if (mode !== "B") return text;
+
+    let result = text;
+
+    // Settings -> Spices/Flavor profile
+    result = result.replace(/\b(settings?|preferences?|config(uration)?)\b/gi, (match) => {
+      const options = ["spices", "seasoning", "flavor profile", "ingredients"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Edit -> Remix/Add flavor to
+    result = result.replace(/\b(edit|modify|adjust|tweak|update)\b/gi, (match) => {
+      const options = ["remix", "add flavor to", "spice up"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Custom -> Signature/Homemade
+    result = result.replace(/\b(custom|personalized?|bespoke)\b/gi, (match) => {
+      const options = ["signature", "homemade", "secret recipe"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Processing/Running -> In the kitchen/On the stove
+    result = result.replace(/\b(processing|running|executing|working)\b/gi, (match) => {
+      const options = ["in the kitchen", "on the stove", "simmering"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Finish/Complete -> Plate it up/Ready to eat
+    result = result.replace(/\b(finish(ed)?|complete(d)?|ready|done)\b/gi, (match) => {
+      const options = ["plate it up", "serve it", "ready to eat"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    return result;
+  }
+
+  function applyModeAwareReplacements(text, seed, mode) {
+    let result = text;
+    result = applyAdminOwnerReplacements(result, seed, mode);
+    result = applySaveVaultReplacements(result, seed, mode);
+    result = applyTryAgainReplacements(result, seed, mode);
+    result = applyWaitReplacements(result, seed, mode);
+    result = applyUserReplacements(result, seed);
+    result = applyCookingMetaphors(result, seed, mode);
+    return result;
+  }
+
+  // ============================================================================
   // Dictionary Replacements
   // ============================================================================
 
@@ -497,16 +737,6 @@
       const isPlural = match.toLowerCase().endsWith("s");
       const singularOptions = ["hiccup", "situation", "bump in da road", "little thing"];
       const pluralOptions = ["hiccups", "situations", "bumps in da road", "little things"];
-      const options = isPlural ? pluralOptions : singularOptions;
-      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
-    });
-  }
-
-  function applyUserReplacements(text, seed) {
-    return text.replace(/\b(user|users)\b/gi, (match) => {
-      const isPlural = match.toLowerCase().endsWith("s");
-      const singularOptions = ["my people", "family", "nephew"];
-      const pluralOptions = ["my people", "da family", "ya'll"];
       const options = isPlural ? pluralOptions : singularOptions;
       return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
     });
@@ -566,6 +796,36 @@
     return result;
   }
 
+  function applySecurityReplacements(text, seed) {
+    let result = text;
+    
+    // Password/Code -> Secret Code, G-Code, Combination
+    result = result.replace(/\b(password|passcode|pin|code)\b/gi, (match) => {
+      const options = ["secret code", "G-Code", "combination"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Private/Secure -> Low profile, Between us, For the fam only
+    result = result.replace(/\b(private|secure|confidential|restricted)\b/gi, (match) => {
+      const options = ["low profile", "between us", "for the fam only"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Security -> Lock it down, Keep it guarded, The code
+    result = result.replace(/\b(security|secure)\b/gi, (match) => {
+      const options = ["lock it down", "keep it guarded", "the code"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    // Unknown/Error -> Unverified, Strange face, Who dis?
+    result = result.replace(/\b(unknown|unrecognized|unfamiliar)\b/gi, (match) => {
+      const options = ["unverified", "strange face", "who dis?"];
+      return preserveCase(match, selectByHash(options, computeHash(match.toLowerCase()) + seed));
+    });
+
+    return result;
+  }
+
   function applyStateReplacements(text) {
     let result = text;
     result = replaceWordPreservingCase(result, /\btimed out\b/gi, "took too long");
@@ -587,16 +847,17 @@
     return result;
   }
 
-  function applyDictionary(text, seed) {
+  function applyDictionary(text, seed, mode) {
     let result = text;
     result = applyLoadingReplacements(result);
+    result = applyModeAwareReplacements(result, seed, mode);
     result = applyErrorReplacements(result, seed);
-    result = applyUserReplacements(result, seed);
     result = applyConnectionReplacements(result, seed);
     result = applySuccessReplacements(result, seed);
     result = applyAdjectiveReplacements(result);
     result = applyActionReplacements(result);
     result = applySaveReplacements(result);
+    result = applySecurityReplacements(result, seed);
     result = applyStateReplacements(result);
     result = applyCourtesyReplacements(result);
     return result;
@@ -655,10 +916,49 @@
     if (level < MAX_LEVEL) return text;
 
     let result = text;
+
+    /**
+     * Authentic izzle rule: Only use if it creates internal rhyme or softens harsh concepts.
+     * Bad: "The connection-izzle is brok-izzle."
+     * Authentic: "The connection is fizzled, but we still in the hizzle." (AABB rhyme)
+     */
+
+    // Only apply izzle for softening negatives with rhyme scheme
+    if (/\b(broke|broken)\b/gi.test(result)) {
+      result = result.replace(/\bbroken\b/gi, (m) => preserveCase(m, "fizzled"));
+    }
+
+    // "sure" -> "shizzle" has history in Snoop's speech
     result = result.replace(/\bsure\b/gi, (m) => preserveCase(m, "shizzle"));
 
-    if (seed % 3 === 0) {
+    // Real occasionally becomes "rizzle" but only with rhyme context
+    if (seed % 3 === 0 && /\breal\b.*\b(deal|feel|meal|heal|wheel|steal)\b/i.test(result)) {
       result = result.replace(/\breal\b/gi, (m) => preserveCase(m, "rizzle"));
+    }
+
+    return result;
+  }
+
+  /**
+   * Double-G Stutter: Authentic 90s Snoop often repeated consonants for percussive effect.
+   * "We talkin' B-I-G business" - spell out keywords rhythmically.
+   */
+  function applyDoubleGStutter(text, seed, level) {
+    if (level < MAX_LEVEL || seed % 13 !== 0) return text;
+
+    let result = text;
+
+    // Spell out emphasis words rhythmically
+    const stutWords = ["business", "game", "play", "moves"];
+
+    for (const word of stutWords) {
+      if (new RegExp(`\\b${word}\\b`, "i").test(result)) {
+        const spelled = spellOutWord(word);
+        result = result.replace(new RegExp(`\\b${word}\\b`, "i"), (m) =>
+          preserveCase(m, spelled)
+        );
+        break; // Only spell one per sentence
+      }
     }
 
     return result;
@@ -746,6 +1046,52 @@
   }
 
   // ============================================================================
+  // West Coast Grammar (Zero Copula, Invariant Be)
+  // ============================================================================
+
+  /**
+   * Deep West Coast Grammar transformation for authentic speech patterns.
+   * Uses zero copula (dropping "is/are"), invariant be, and future tense reduction.
+   * 
+   * Examples:
+   * - "The system is processing" -> "The system processing"
+   * - "There is a problem" -> "It's a problem"
+   * - "We are going to reset" -> "We finna reset"
+   */
+  function applyWestCoastGrammar(text, seed, level) {
+    if (level < MAX_LEVEL) return text;
+
+    let result = text;
+
+    // Rule 1: Zero Copula - Drop "is/are" before -ing verbs
+    // "The system is processing" -> "The system processing"
+    result = result.replace(/\b(is|are)\s+([a-z]+ing)\b/gi, "$2");
+
+    // Rule 2: "There is/are" -> "It's" (Snoop conversational style)
+    // "There is a problem" -> "It's a problem"
+    result = result.replace(/\bThere\s+(is|are)\b/gi, "It's");
+
+    // Rule 3: Future tense reduction - "is/are going to" -> "finna" or "bout to"
+    // "We are going to reset" -> "We finna reset" or "We bout to reset"
+    if (seed % 2 === 0) {
+      result = result.replace(/\b(is|are)\s+going\s+to\b/gi, "finna");
+    } else {
+      result = result.replace(/\b(is|are)\s+going\s+to\b/gi, "bout to");
+    }
+
+    // Rule 4: Invariant "be" for habitual action
+    // "The app runs slow" -> "The app be running slow"
+    if (seed % 5 === 0) {
+      result = result.replace(/\b(runs|works|loads)\s+(slow|fast|smooth)/gi, (match, verb, speed) => {
+        const stem = verb.replace(/s$/, "");
+        return `be ${stem}in' ${speed}`;
+      });
+    }
+
+    return result;
+  }
+
+  // ============================================================================
   // Phonetics (Sound Changes)
   // ============================================================================
 
@@ -826,6 +1172,32 @@
     result = applySpellOutEmphasis(result, seed, level);
     result = applyForShizzlePunchline(result, seed, level);
     return result;
+  }
+
+  // ============================================================================
+  // Preacher Rhythm (Anadiplosis / Emphatic Repetition)
+  // ============================================================================
+
+  /**
+   * When Snoop gives advice or preaches, he uses rhetorical repetition.
+   * Repeating the first verb at the end for emphasis (anadiplosis).
+   * 
+   * Examples:
+   * - "Focus on the details... I said FOCUS..."
+   * - "Listen to me... I said LISTEN..."
+   */
+  function applyPreacherRepetition(text, seed, level) {
+    if (level < MAX_LEVEL || seed % 19 !== 0) return text;
+
+    const trimmed = text.trim();
+    const imperativeMatch = trimmed.match(/^(Look|Listen|Focus|Watch|Stop|Read|Click|Tap|Remember|Check|Understand|Know|Feel|See)\b/i);
+
+    if (!imperativeMatch || trimmed.length > 60) return text;
+
+    const verb = imperativeMatch[1];
+    const base = trimmed.endsWith(".") ? trimmed.slice(0, -1) : trimmed;
+
+    return `${base}... I said ${verb.toUpperCase()}...`;
   }
 
   // ============================================================================
@@ -1022,11 +1394,116 @@
   }
 
   // ============================================================================
+  // Geographical Anchoring (LBC - Long Beach Connection)
+  // ============================================================================
+
+  /**
+   * Snoop centers the universe in Long Beach and the Eastside.
+   * Global and worldwide references get anchored to California geography.
+   * 
+   * Examples:
+   * - "Worldwide" -> "From the LBC to the whole map"
+   * - "Global" -> "Worldwide Eastsidaz"
+   * - "Local" -> "Neighborhood"
+   */
+  function applyGeographicAnchors(text, seed, level) {
+    if (level < 2) return text;
+
+    let result = text;
+
+    // "Worldwide" -> "From the LBC to the whole map"
+    result = result.replace(/\bworldwide\b/gi, (m) =>
+      preserveCase(m, "from the LBC to the whole map")
+    );
+
+    // "Global" -> "Worldwide Eastsidaz"
+    result = result.replace(/\bglobal\b/gi, (m) =>
+      preserveCase(m, "worldwide Eastsidaz")
+    );
+
+    // "Local" -> "Neighborhood"
+    result = result.replace(/\blocal\b/gi, (m) =>
+      preserveCase(m, "neighborhood")
+    );
+
+    return result;
+  }
+
+  // ============================================================================
   // UI Artifact Normalization
   // ============================================================================
 
   function normalizeUiArtifacts(chunk) {
     return chunk.replace(/\bLoading\?\s+please\s+wait\b/gi, "Loading… please wait");
+  }
+
+  // ============================================================================
+  // Scenario-Specific Prompt Engineering Formulas
+  // ============================================================================
+
+  /**
+   * Scenario A: Warning Message
+   * Formula: [1993 Stoicism] + [2025 Reassurance]
+   * Example: "Yo, peep this. The system actin' scandalous right now (93).
+   *          But we ain't foldin'. We just pivot and slide to the next play. Tap retry."
+   */
+  function formatWarningScenario(text, seed) {
+    const trimmed = text.trim();
+    if (!/\b(warning|error|failed|problem|issue)\b/i.test(trimmed)) return text;
+
+    const modeAIntro = selectByHash(MODE_A_INTROS, seed);
+    const bridge = generateCodeSwitchBridge(text, seed);
+    const solution = selectByHash([
+      "Tap retry.",
+      "Hit refresh and we got you.",
+      "Reset and run it back.",
+      "Let's smooth this out."
+    ], seed + 17);
+
+    return `${modeAIntro}. ${trimmed}${bridge} ${solution}`;
+  }
+
+  /**
+   * Scenario B: Tutorial / Instruction
+   * Formula: [Grandpa Metaphor] + [Specific Command] + [Signature Tag]
+   * Example: "See, you gotta treat this app like a fine suit. Keep it clean.
+   *           Click that icon right there—yeah, the shiny one—and step into the room."
+   */
+  function formatTutorialScenario(text, seed) {
+    const trimmed = text.trim();
+    if (!/\b(click|tap|press|select|enter|instruction|step|follow)\b/i.test(trimmed)) return text;
+
+    const metaphors = [
+      "See, you gotta treat this app like a fine suit. Keep it clean.",
+      "Check it out, family. This is like keepin' your crib organized.",
+      "Listen here. This is like waxin' your whip—do it smooth.",
+      "See here, loved one. Treat this like buildin' your empire."
+    ];
+
+    const metaphor = selectByHash(metaphors, seed);
+    const tag = selectByHash(SENTENCE_TAGS, seed + 23);
+
+    return `${metaphor} ${trimmed} — ${tag}`;
+  }
+
+  /**
+   * Scenario C: Terms of Service / Agreement
+   * Formula: [The "Masters" Frame]
+   * Example: "Before we shake hands on this, make sure you read the paperwork.
+   *           We keepin' everything transparent. You own yours, I own mine."
+   */
+  function formatAgreementScenario(text, seed) {
+    const trimmed = text.trim();
+    if (!/\b(agree|accept|terms|policy|service|condition)\b/i.test(trimmed)) return text;
+
+    const frames = [
+      "Before we shake hands on this, make sure you read the paperwork. We keepin' everything transparent. You own yours, I own mine.",
+      "Look, this is how we do business. Everything on the table, no games. You read it, I read it, we both good?",
+      "See, we gotta keep it straight. This is the contract, baby. You own your masters, we own ours. That's equity right there."
+    ];
+
+    const frame = selectByHash(frames, seed);
+    return `${frame} ${trimmed}`;
   }
 
   // ============================================================================
@@ -1040,6 +1517,20 @@
 
     if (!core) return sentence;
 
+    // Detect mode (The Hybrid code-switch)
+    const mode = detectMode(core);
+
+    // Apply scenario-specific formatting for strong signals
+    if (sentenceIndex === 0) {
+      if (/\b(warning|error|failed|critical|problem)\b/i.test(core) && mode === "A") {
+        core = formatWarningScenario(core, seed);
+      } else if (/\b(click|tap|press|instruction|tutorial|step)\b/i.test(core) && mode === "B") {
+        core = formatTutorialScenario(core, seed);
+      } else if (/\b(agree|accept|terms|policy|service)\b/i.test(core)) {
+        core = formatAgreementScenario(core, seed);
+      }
+    }
+
     core = splitLongSentence(core, seed + sentenceIndex);
     core = softenUrgentLanguage(core);
     core = rewriteConfusion(core, seed + sentenceIndex);
@@ -1047,11 +1538,29 @@
     core = applyCoachFrame(core);
     core = applyUiPhrases(core, seed + sentenceIndex);
     core = addSentenceIntro(core, seed + sentenceIndex, sentenceIndex, level);
-    core = applyDictionary(core, seed + sentenceIndex);
+    
+    // Pass mode to dictionary for mode-aware replacements
+    core = applyDictionary(core, seed + sentenceIndex, mode);
+    
     core = applySnoopLexicon(core, seed + sentenceIndex, level);
     core = applyLightGizoogle(core, seed + sentenceIndex, level);
+    
+    // Apply double-G stutter (emphasis rule)
+    core = applyDoubleGStutter(core, seed + sentenceIndex, level);
+    
+    // Apply West Coast Grammar (zero copula, invariant be, future tense)
+    core = applyWestCoastGrammar(core, seed + sentenceIndex, level);
+    
     core = applyPhonetics(core, seed + sentenceIndex, level);
+    
+    // Apply geographical anchoring (LBC references)
+    core = applyGeographicAnchors(core, seed + sentenceIndex, level);
+    
     core = applyEmphasis(core, seed + sentenceIndex, level);
+    
+    // Apply preacher rhythm (emphatic repetition)
+    core = applyPreacherRepetition(core, seed + sentenceIndex, level);
+    
     core = addAddressTerm(core, seed + sentenceIndex, level);
     core = addSuccessAffirmation(core, seed + sentenceIndex, level);
     core = addReassurance(core, seed + sentenceIndex, level);
