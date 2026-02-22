@@ -1,0 +1,17 @@
+{
+  "name": "gizoogle-local",
+  "version": "0.5.0",
+  "private": true,
+  "description": "Local browser extension that remixes visible page text in a Snoop-inspired voice.",
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/check.mjs",
+    "test": "node --test && node scripts/smoke-test-local.js",
+    "smoke": "node scripts/smoke-test-local.js",
+    "benchmark": "node scripts/benchmark-translator.js",
+    "format": "npx prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^3.8.1"
+  }
+}

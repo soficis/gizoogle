@@ -1,18 +1,50 @@
 {
   "manifest_version": 3,
-  "name": "Gizoogle (Local)",
-  "version": "0.1.0",
-  "description": "Local, on-page Snoop-inspired “Uncle Snoop/Coach” West Coast vibe filter that updates as pages change.",
+  "name": "Gizoogle",
+  "version": "0.5.0",
+  "description": "Local, on-page Snoop-inspired West Coast vibe filter that updates as pages change.",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],
   "action": {
-    "default_title": "Gizoogle (Local)",
+    "default_title": "Gizoogle",
     "default_popup": "popup.html"
   },
   "content_scripts": [
     {
       "matches": ["<all_urls>"],
-      "js": ["translator.js", "content-script.js"],
+      "js": [
+        "src/shared/contracts.js",
+        "src/shared/validation.js",
+        "src/domain/translator/constants.js",
+        "src/domain/translator/snoop-lexicon-level1.js",
+        "src/domain/translator/snoop-lexicon-level2.js",
+        "src/domain/translator/snoop-lexicon-level3.js",
+        "src/domain/translator/snoop-lexicon-izzle-aave.js",
+        "src/domain/translator/snoop-lexicon-style-data.js",
+        "src/domain/translator/snoop-lexicon-data.js",
+        "src/domain/translator/snoop-lexicon.js",
+        "src/domain/translator/helpers.js",
+        "src/domain/translator/mode-detection.js",
+        "src/domain/translator/preserve.js",
+        "src/domain/translator/replacements-shared.js",
+        "src/domain/translator/replacements-core.js",
+        "src/domain/translator/replacements-aave.js",
+        "src/domain/translator/replacements-style.js",
+        "src/domain/translator/replacements-flavor.js",
+        "src/domain/translator/replacements.js",
+        "src/domain/translator/pipeline.js",
+        "src/domain/translator/index.js",
+        "src/app/settings-service.js",
+        "src/app/translate-page-usecase.js",
+        "src/app/error-reporter.js",
+        "src/adapters/chrome/storage.js",
+        "src/adapters/dom/text-node-cache.js",
+        "src/adapters/dom/text-node-eligibility.js",
+        "src/adapters/dom/text-node-walker.js",
+        "src/adapters/dom/scan-scheduler.js",
+        "src/adapters/dom/mutation-observer.js",
+        "src/content-script/entry.js"
+      ],
       "run_at": "document_idle"
     }
   ]

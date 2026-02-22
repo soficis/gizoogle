@@ -1,0 +1,44 @@
+[
+  {
+    "name": "country replacements",
+    "level": 2,
+    "input": "North Korea and South Korea",
+    "expected": "Uptown Korea an' Downtown Korea"
+  },
+  {
+    "name": "warning mode",
+    "level": 2,
+    "input": "Error while loading data",
+    "expected": "Aye, check it, Error while loadin' data"
+  },
+  {
+    "name": "level 3 signature",
+    "level": 3,
+    "input": "This is testing string number 8524 in the house.",
+    "expected": "Yo, Dis is testin' string numba 8524 in da hizzle. ya heard?"
+  },
+  {
+    "name": "preserve url",
+    "level": 2,
+    "input": "Please wait at https://example.com and email test@example.com",
+    "expected": "Please hold tight at https://example.com an' email test@example.com"
+  },
+  {
+    "name": "aave restructuring",
+    "level": 3,
+    "input": "he is running fast.",
+    "expected": "he runnin' fast."
+  },
+  {
+    "name": "geographic flavor",
+    "level": 3,
+    "input": "i travel to the city number 100.",
+    "expected": "Straight outta Long Beach, i travel ta da town numba 100."
+  },
+  {
+    "name": "quote intent mapping",
+    "level": 3,
+    "input": "my hustle and grind goal 2.",
+    "expected": "my hustle an' grind gizzle 2. The game is to be sold, not to be told."
+  }
+]

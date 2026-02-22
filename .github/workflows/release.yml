@@ -1,0 +1,150 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing git tag to publish (example: v0.5.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build extension bundle
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve release tag
+        id: release_tag
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Checkout requested tag for manual runs
+        if: github.event_name == 'workflow_dispatch'
+        shell: bash
+        run: |
+          git fetch --tags --force
+          git checkout "tags/${{ steps.release_tag.outputs.value }}"
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run quality gates
+        run: |
+          npm run check
+          npm run test
+          npm run build
+
+      - name: Create release zip
+        id: package
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag_name="${{ steps.release_tag.outputs.value }}"
+          zip_name="gizoogle-${tag_name}.zip"
+          mkdir -p release-artifacts
+
+          include_files=(manifest.json popup.html popup.css src)
+          for optional_file in README.md LICENSE; do
+            if [ -e "${optional_file}" ]; then
+              include_files+=("${optional_file}")
+            fi
+          done
+
+          zip -r "release-artifacts/${zip_name}" "${include_files[@]}"
+          sha256sum "release-artifacts/${zip_name}" > "release-artifacts/${zip_name}.sha256"
+
+          echo "zip_name=${zip_name}" >> "$GITHUB_OUTPUT"
+
+      - name: Upload bundle artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle
+          path: release-artifacts/**
+          if-no-files-found: error
+
+  release:
+    name: Create and publish GitHub release
+    needs:
+      - build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve release tag
+        id: release_tag
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "value=${{ github.event.inputs.tag }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "value=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Download all build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: release-artifacts
+          merge-multiple: true
+
+      - name: Show downloaded artifacts
+        shell: bash
+        run: find release-artifacts -type f | sort
+
+      - name: Create/Update GitHub release
+        uses: docker://ghcr.io/mini-bomba/create-github-release:v1.2.0
+        env:
+          INPUT_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          INPUT_TAG: ${{ steps.release_tag.outputs.value }}
+          INPUT_NAME: Gizoogle ${{ steps.release_tag.outputs.value }}
+          INPUT_BODY: |
+            Gizoogle browser extension release ${{ steps.release_tag.outputs.value }}
+
+            This release contains a production-ready unpacked extension bundle built by CI.
+            - Commit: ${{ github.sha }}
+            - Workflow run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+            Files:
+            - gizoogle-<tag>.zip
+            - gizoogle-<tag>.zip.sha256
+
+            Install:
+            1. Download and extract the zip.
+            2. Open chrome://extensions/ (or edge://extensions/).
+            3. Enable Developer mode.
+            4. Click Load unpacked and select the extracted folder.
+
+      - name: Upload assets to GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.release_tag.outputs.value }}
+        shell: bash
+        run: |
+          mapfile -d '' release_files < <(find release-artifacts -type f -print0)
+          if [ "${#release_files[@]}" -eq 0 ]; then
+            echo "No release assets found."
+            exit 1
+          fi
+
+          gh release upload "${RELEASE_TAG}" --clobber "${release_files[@]}"
