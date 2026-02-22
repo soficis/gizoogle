@@ -104,24 +104,6 @@ npm run benchmark  # optional performance check
 
 ---
 
-## 📁 Documentation
-
-All project documentation lives in da `docs/` folder:
-
-| File                                                                                          | What It Covers                                            |
-| --------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| [quality-gates.md](docs/quality-gates.md)                                                     | How ta run check, test, build commands                    |
-| [architecture.md](docs/architecture.md)                                                       | Translator architecture and current pipeline stages       |
-| [codex_roadmap.md](docs/codex_roadmap.md)                                                     | v0.5.0 implementation roadmap for Phases 9–14             |
-| [snoop_model.md](docs/snoop_model.md)                                                         | Implementation research and feasibility notes             |
-| [claude_roadmap_v0.4.0.md](docs/archive/claude_roadmap_v0.4.0.md)                             | Archived v0.4.0 roadmap and completion audit              |
-| [Snoop Dogg Voice Translator Upgrade.md](docs/Snoop%20Dogg%20Voice%20Translator%20Upgrade.md) | Computational sociolinguistic framework fo' da translator |
-| [codex_agents.md](docs/codex_agents.md)                                                       | Coding standards an' agent guidelines                     |
-| [snoop.md](docs/snoop.md)                                                                     | Curated Snoop Dogg quotes an' reference material          |
-| [COMMIT_MESSAGE.md](docs/COMMIT_MESSAGE.md)                                                   | Latest commit message fo' da current release              |
-
----
-
 ## ⚖️ License & FOSS Philosophizing (GPLv3)
 
 Dis project is licensed under da **GNU General Public License v3.0**.
