@@ -5,6 +5,7 @@
   --text: #f1f1f6;
   --muted: #a5a5b6;
   --border: rgba(255, 255, 255, 0.12);
+  --error: #ff7b7b;
 }
 
 body {
@@ -60,6 +61,12 @@ input[type="checkbox"] {
   font-weight: 600;
   color: #6db3f2;
   letter-spacing: 0.5px;
+}
+
+.error {
+  margin: 8px 2px 0;
+  color: var(--error);
+  font-size: 12px;
 }
 
 .row + .row {

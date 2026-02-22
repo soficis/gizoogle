@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Gizoogle (Local)</title>
+    <title>Gizoogle</title>
     <link rel="stylesheet" href="popup.css" />
   </head>
   <body>
@@ -23,8 +23,17 @@
       <p id="levelLabel" class="level-label"></p>
 
       <p id="hint" class="hint"></p>
+      <p id="errorBanner" class="error" hidden></p>
     </main>
-    <script src="popup.js"></script>
+
+    <script src="src/shared/contracts.js"></script>
+    <script src="src/shared/validation.js"></script>
+    <script src="src/app/settings-service.js"></script>
+    <script src="src/app/error-reporter.js"></script>
+    <script src="src/adapters/chrome/storage.js"></script>
+    <script src="src/adapters/chrome/messaging.js"></script>
+    <script src="src/ui/popup/popup-view.js"></script>
+    <script src="src/ui/popup/popup-state.js"></script>
+    <script src="src/ui/popup/popup-controller.js"></script>
   </body>
 </html>
-
