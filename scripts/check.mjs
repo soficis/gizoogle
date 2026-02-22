@@ -11,7 +11,7 @@ function collectFiles(directory) {
   const files = [];
 
   for (const entry of entries) {
-    if (entry.name === ".git") {
+    if (entry.name === ".git" || entry.name === "node_modules") {
       continue;
     }
 
