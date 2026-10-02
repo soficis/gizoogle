@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "Gizoogle",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "description": "Local, on-page Snoop-inspired West Coast vibe filter that updates as pages change.",
   "permissions": ["storage"],
   "host_permissions": ["<all_urls>"],

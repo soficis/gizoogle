@@ -139,6 +139,6 @@ No infringement or harm is intended. The linguistics, stylistic choices, and tra
 
 > _"When I'm no longer rapping, I want to open up an ice cream parlor and call myself Scoop Dogg."_ — Snoop Dogg
 
-**v0.5.0** · Made wit' love from da LBC 🏠
+**v0.6.0** · Made wit' love from da LBC 🏠
 
 </div>
