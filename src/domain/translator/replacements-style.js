@@ -67,10 +67,8 @@
     const openers = getAllowedModeOpeners(mode, level);
     if (openers.length === 0) return input;
 
-    const match = input.match(/^(\s*)([\s\S]*?)(\s*)$/);
-    const leadingSpace = match ? match[1] : "";
-    const coreText = match ? match[2] : input;
-    const trailingSpace = match ? match[3] : "";
+    const [leadingSpace, coreText, trailingSpace] =
+      shared.splitSurroundingSpace(input);
 
     if (!coreText || hasExistingOpener(coreText, openers)) return input;
     if (
@@ -100,10 +98,8 @@
       return input;
     }
 
-    const match = input.match(/^(\s*)([\s\S]*?)(\s*)$/);
-    const leadingSpace = match ? match[1] : "";
-    const coreText = match ? match[2] : input;
-    const trailingSpace = match ? match[3] : "";
+    const [leadingSpace, coreText, trailingSpace] =
+      shared.splitSurroundingSpace(input);
     const phrase =
       lexicon.melodicChant.phrases[
         helpers.simpleHash(coreText, 181) % lexicon.melodicChant.phrases.length
@@ -195,9 +191,8 @@
     return shared
       .splitIntoSentences(withComma)
       .map((sentence, index) => {
-        const match = sentence.match(/^([\s\S]*?)(\s*)$/);
-        const textPart = match ? match[1] : sentence;
-        const trailingSpace = match ? match[2] : "";
+        const [textPart, trailingSpace] =
+          shared.splitTrailingSpace(sentence);
         const fragmented = applyEmDashFragmentation(textPart, level);
         return (
           appendAddress(applyEmphasisElongation(fragmented), index) +

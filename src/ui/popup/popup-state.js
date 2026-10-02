@@ -20,50 +20,50 @@
       return settingsService.load();
     }
 
-    async function setEnabled(enabled) {
-      const normalizedEnabled = validation.parseEnabled(enabled);
-
-      const saveResult = await settingsService.saveEnabled(normalizedEnabled);
+    async function saveAndNotify(saveFn, message, resultPayload) {
+      const saveResult = await saveFn();
 
       if (!saveResult.ok) {
         return saveResult;
       }
 
-      const messageResult = await messagingAdapter.sendToActiveTab({
-        type: contracts.MESSAGE_TYPES.SET_ENABLED,
-        enabled: normalizedEnabled
-      });
+      const messageResult = await messagingAdapter.sendToActiveTab(message);
 
       if (!messageResult.ok) {
         return messageResult;
       }
 
-      return validation.createSuccess({
-        enabled: normalizedEnabled
-      });
+      return validation.createSuccess(resultPayload);
+    }
+
+    async function setEnabled(enabled) {
+      const normalizedEnabled = validation.parseEnabled(enabled);
+
+      return saveAndNotify(
+        () => settingsService.saveEnabled(normalizedEnabled),
+        {
+          type: contracts.MESSAGE_TYPES.SET_ENABLED,
+          enabled: normalizedEnabled
+        },
+        {
+          enabled: normalizedEnabled
+        }
+      );
     }
 
     async function setLevel(level) {
       const normalizedLevel = validation.clampLevel(level);
 
-      const saveResult = await settingsService.saveLevel(normalizedLevel);
-
-      if (!saveResult.ok) {
-        return saveResult;
-      }
-
-      const messageResult = await messagingAdapter.sendToActiveTab({
-        type: contracts.MESSAGE_TYPES.SET_LEVEL,
-        level: normalizedLevel
-      });
-
-      if (!messageResult.ok) {
-        return messageResult;
-      }
-
-      return validation.createSuccess({
-        level: normalizedLevel
-      });
+      return saveAndNotify(
+        () => settingsService.saveLevel(normalizedLevel),
+        {
+          type: contracts.MESSAGE_TYPES.SET_LEVEL,
+          level: normalizedLevel
+        },
+        {
+          level: normalizedLevel
+        }
+      );
     }
 
     return Object.freeze({

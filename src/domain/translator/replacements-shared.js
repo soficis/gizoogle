@@ -75,6 +75,24 @@
     return false;
   }
 
+  function splitTrailingSpace(text) {
+    const match = String(text ?? "").match(/^([\s\S]*?)(\s*)$/);
+    if (!match) {
+      return [text, ""];
+    }
+
+    return [match[1], match[2]];
+  }
+
+  function splitSurroundingSpace(text) {
+    const match = String(text ?? "").match(/^(\s*)([\s\S]*?)(\s*)$/);
+    if (!match) {
+      return ["", text, ""];
+    }
+
+    return [match[1], match[2], match[3]];
+  }
+
   const replacementsShared = Object.freeze({
     escapeRegex,
     normalizePhrase,
@@ -83,7 +101,9 @@
     applyReplacementRules,
     resolveBackReferences,
     endsWithCloser,
-    containsCloser
+    containsCloser,
+    splitTrailingSpace,
+    splitSurroundingSpace
   });
 
   translator.replacementsShared = replacementsShared;

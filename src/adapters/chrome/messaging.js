@@ -16,15 +16,7 @@
   }
 
   function normalizeErrorMessage(error) {
-    if (!error) {
-      return "unknown error";
-    }
-
-    if (typeof error.message === "string" && error.message.trim()) {
-      return error.message;
-    }
-
-    return String(error);
+    return validation.normalizeErrorMessage(error);
   }
 
   function createMessagingAdapter(chromeApi) {
@@ -119,7 +111,8 @@
   }
 
   chromeAdapters.messaging = Object.freeze({
-    createMessagingAdapter
+    createMessagingAdapter,
+    normalizeErrorMessage
   });
 
   if (typeof module === "object" && module.exports) {

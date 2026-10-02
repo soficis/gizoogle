@@ -82,9 +82,7 @@
     return shared
       .splitIntoSentences(input)
       .map((sentence) => {
-        const match = sentence.match(/^([\s\S]*?)(\s*)$/);
-        const textPart = match ? match[1] : sentence;
-        const trailingSpace = match ? match[2] : "";
+        const [textPart, trailingSpace] = shared.splitTrailingSpace(sentence);
 
         if (
           shouldSkipSentence(textPart) ||

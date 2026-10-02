@@ -49,11 +49,24 @@
     };
   }
 
+  function normalizeErrorMessage(error) {
+    if (!error) {
+      return "unknown error";
+    }
+
+    if (typeof error.message === "string" && error.message.trim()) {
+      return error.message;
+    }
+
+    return String(error);
+  }
+
   const validation = Object.freeze({
     clampLevel,
     parseEnabled,
     createFailure,
-    createSuccess
+    createSuccess,
+    normalizeErrorMessage
   });
 
   shared.validation = validation;

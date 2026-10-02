@@ -40,9 +40,8 @@
     return shared
       .splitIntoSentences(input)
       .map((sentence, sentenceIndex) => {
-        const match = sentence.match(/^([\s\S]*?)(\s*)$/);
-        const textPart = match ? match[1] : sentence;
-        const trailingSpace = match ? match[2] : "";
+        const [textPart, trailingSpace] =
+          shared.splitTrailingSpace(sentence);
         const trimmedSentence = textPart.trim();
 
         if (!trimmedSentence || /\?\s*$/.test(trimmedSentence)) return sentence;
@@ -133,9 +132,7 @@
       ],
       reference,
     );
-    const match = input.match(/^([\s\S]*?)(\s*)$/);
-    const textPart = match ? match[1] : input;
-    const trailingSpace = match ? match[2] : "";
+    const [textPart, trailingSpace] = shared.splitTrailingSpace(input);
     return `${textPart}${suffix}${trailingSpace}`;
   }
 
@@ -169,9 +166,7 @@
       return input;
     }
 
-    const match = input.match(/^([\s\S]*?)(\s*)$/);
-    const textPart = match ? match[1] : input;
-    const trailingSpace = match ? match[2] : "";
+    const [textPart, trailingSpace] = shared.splitTrailingSpace(input);
     const normalizedText = textPart.trimEnd();
     const withTerminal = helpers.hasTerminalPunctuation(normalizedText)
       ? normalizedText

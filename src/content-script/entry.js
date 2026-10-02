@@ -72,27 +72,33 @@
     };
   }
 
-  function setEnabled(value) {
-    const normalizedEnabled = validation.parseEnabled(value);
-    const hasChanged = state.enabled !== normalizedEnabled;
+  function normalizeSettings(s) {
+    return {
+      enabled: validation.parseEnabled(s.enabled),
+      level: validation.clampLevel(s.level)
+    };
+  }
 
-    state.enabled = normalizedEnabled;
+  function updateSetting(key, normalized, shouldRescan) {
+    const hasChanged = state[key] !== normalized;
 
-    if (hasChanged) {
+    state[key] = normalized;
+
+    if (key === "level") {
+      translatorApi.setLevel(normalized);
+    }
+
+    if (hasChanged && shouldRescan) {
       scheduleFullScan();
     }
   }
 
+  function setEnabled(value) {
+    updateSetting("enabled", validation.parseEnabled(value), true);
+  }
+
   function setLevel(value) {
-    const normalizedLevel = validation.clampLevel(value);
-    const hasChanged = state.level !== normalizedLevel;
-
-    state.level = normalizedLevel;
-    translatorApi.setLevel(normalizedLevel);
-
-    if (hasChanged && state.enabled) {
-      scheduleFullScan();
-    }
+    updateSetting("level", validation.clampLevel(value), state.enabled);
   }
 
   function onScanComplete() {
@@ -143,10 +149,7 @@
 
   function scheduleFullScan(requestedSettings = getCurrentSettings()) {
     if (state.scanState === "scanning") {
-      state.pendingSettings = {
-        enabled: validation.parseEnabled(requestedSettings.enabled),
-        level: validation.clampLevel(requestedSettings.level)
-      };
+      state.pendingSettings = normalizeSettings(requestedSettings);
       return;
     }
 
@@ -162,10 +165,7 @@
       state.observer.stop();
     }
 
-    const normalizedSettings = {
-      enabled: validation.parseEnabled(requestedSettings.enabled),
-      level: validation.clampLevel(requestedSettings.level)
-    };
+    const normalizedSettings = normalizeSettings(requestedSettings);
 
     const nodes = walker.collectTextNodes(root.document.body);
 

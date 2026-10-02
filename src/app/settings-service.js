@@ -15,13 +15,14 @@
   }
 
   function normalizeSettings(rawSettings = {}) {
-    const enabledValue = Object.prototype.hasOwnProperty.call(rawSettings, contracts.STORAGE_KEYS.ENABLED)
-      ? rawSettings[contracts.STORAGE_KEYS.ENABLED]
-      : contracts.DEFAULT_STATE.ENABLED;
+    function pick(key, fallback) {
+      return Object.prototype.hasOwnProperty.call(rawSettings, key)
+        ? rawSettings[key]
+        : fallback;
+    }
 
-    const levelValue = Object.prototype.hasOwnProperty.call(rawSettings, contracts.STORAGE_KEYS.LEVEL)
-      ? rawSettings[contracts.STORAGE_KEYS.LEVEL]
-      : contracts.DEFAULT_STATE.LEVEL;
+    const enabledValue = pick(contracts.STORAGE_KEYS.ENABLED, contracts.DEFAULT_STATE.ENABLED);
+    const levelValue = pick(contracts.STORAGE_KEYS.LEVEL, contracts.DEFAULT_STATE.LEVEL);
 
     return {
       enabled: validation.parseEnabled(enabledValue),
@@ -49,17 +50,16 @@
       });
     }
 
-    async function saveEnabled(enabled) {
-      return storageAdapter.set({
-        [contracts.STORAGE_KEYS.ENABLED]: validation.parseEnabled(enabled)
-      });
+    function saveSetting(key, normalizer) {
+      return async function (value) {
+        return storageAdapter.set({
+          [key]: normalizer(value)
+        });
+      };
     }
 
-    async function saveLevel(level) {
-      return storageAdapter.set({
-        [contracts.STORAGE_KEYS.LEVEL]: validation.clampLevel(level)
-      });
-    }
+    const saveEnabled = saveSetting(contracts.STORAGE_KEYS.ENABLED, validation.parseEnabled);
+    const saveLevel = saveSetting(contracts.STORAGE_KEYS.LEVEL, validation.clampLevel);
 
     return Object.freeze({
       load,
